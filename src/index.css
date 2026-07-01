@@ -1,0 +1,233 @@
+@import "tailwindcss";
+
+/* ---- Design tokens: warm monochrome, editorial, no chroma ---- */
+@theme {
+  --font-display: "Marcellus", "Times New Roman", serif;
+  --font-caps: "Marcellus SC", "Marcellus", serif;
+  --font-body: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #1a1611;
+  --color-ink-soft: #3a342a;
+  --color-stone: #8f887b;
+  --color-stone-2: #b9b2a5;
+  --color-bone: #ffffff;
+  --color-bone-2: #e9e4da;
+  --color-bone-3: #ddd6c9;
+  --color-line: rgba(26, 22, 17, 0.16);
+  --color-line-soft: rgba(26, 22, 17, 0.08);
+  --color-line-invert: rgba(243, 240, 234, 0.22);
+
+  --spacing-gutter: clamp(1.25rem, 4vw, 4.5rem);
+}
+
+/* ---- Base ---- */
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    background-color: var(--color-bone);
+  }
+
+  /* Lenis smooth-scroll requirements */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: clip;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-bone);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-bone);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 0.98;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-bone-2);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-stone-2);
+  }
+}
+
+/* ---- Primitives that cannot be expressed as utilities ---- */
+@layer utilities {
+  .eyebrow {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: 0.6875rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+  }
+
+  .grain::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .line-mask {
+    overflow: hidden;
+    display: block;
+  }
+
+  .img-reveal {
+    filter: grayscale(0.32) contrast(1.02);
+    transition: filter 900ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .group:hover .img-reveal {
+    filter: grayscale(0) contrast(1.04);
+  }
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .animate-marquee {
+    animation: marquee 34s linear infinite;
+  }
+
+  .rule {
+    height: 1px;
+    background: var(--color-line);
+    width: 100%;
+  }
+
+  /* brushed-metal caption text: sits behind a photo, peeking below it */
+  @keyframes shine-sweep {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  .shine-text {
+    background-image: linear-gradient(
+      100deg,
+      var(--color-stone) 0%,
+      var(--color-bone-2) 42%,
+      var(--color-bone) 50%,
+      var(--color-bone-2) 58%,
+      var(--color-stone) 100%
+    );
+    background-size: 260% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: shine-sweep 6s ease-in-out infinite;
+  }
+
+  /* Jurisdiction icon motion, mirrored from growforce's criteria icons. */
+  @keyframes icon-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .icon-spin {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    animation: icon-spin 7s linear infinite;
+  }
+
+  @keyframes icon-spin-slow {
+    from {
+      transform: rotate(-24deg);
+    }
+    to {
+      transform: rotate(-384deg);
+    }
+  }
+  .icon-spin-slow {
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    animation: icon-spin-slow 10s linear infinite;
+  }
+
+  @keyframes icon-spin-rev {
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+  .icon-spin-rev {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    animation: icon-spin-rev 11s linear infinite;
+  }
+
+  .icon-spin-slow2 {
+    transform-box: view-box;
+    transform-origin: 50% 50%;
+    animation: icon-spin 13s linear infinite;
+  }
+
+  /* Footer wordmark: gradient sweep revealed on hover, lifted from
+     growforce.agency's footer email treatment. */
+  @keyframes wordmark-rainbow {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  /* splitWords() nests the real text two levels deep (mask span > inner
+     span) — background-clip:text has to sit on that inner span, not the
+     heading itself, or the "text" it clips through doesn't exist there. */
+  .wordmark-hover span span {
+    background: linear-gradient(90deg, #633cc9, #3b8392, #cb24cc);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    transition: color 0.3s ease;
+  }
+  .wordmark-hover:hover span span {
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: wordmark-rainbow 3s ease-in-out infinite;
+  }
+}
