@@ -34,16 +34,22 @@ export default function Divisions() {
           0.35,
         );
 
-      gsap.to(image, {
-        yPercent: -12,
-        ease: "none",
-        scrollTrigger: {
-          trigger: row,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
+      // Parallax stays within the image's 112%-height bleed so the frame's
+      // background never peeks out at the edges.
+      gsap.fromTo(
+        image,
+        { yPercent: 5 },
+        {
+          yPercent: -4,
+          ease: "none",
+          scrollTrigger: {
+            trigger: row,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
         },
-      });
+      );
     });
 
     // Desktop: the stage pins in place and each division slides up over the

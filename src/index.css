@@ -113,8 +113,10 @@
 
   .img-reveal {
     filter: grayscale(0.32) contrast(1.02);
+    /* No `transform` here — GSAP drives transform on these images every
+       scroll frame, and a transition on it fights the tween (jitter). */
     transition: filter 900ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+      scale 1200ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   .group:hover .img-reveal {
     filter: grayscale(0) contrast(1.04);

@@ -40,13 +40,21 @@ export default function Header() {
     <>
       <header
         ref={scope}
-        className={`fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)] transition-[background-color,border-color] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          scrolled
-            ? "border-b border-line bg-bone/85 backdrop-blur-md"
-            : "border-b border-transparent"
-        }`}>
+        className="fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)]">
+        {/* Background lives on a child, not the fixed element itself — iOS
+            Safari samples the fixed element's background-color to tint the
+            status-bar / dynamic-island area, and a translucent one lets page
+            content show through up there. */}
         <div
-          className={`flex items-center justify-between px-gutter transition-[padding] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          aria-hidden
+          className={`absolute inset-0 border-b transition-[background-color,border-color] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+            scrolled
+              ? "border-line bg-bone/85 backdrop-blur-md"
+              : "border-transparent"
+          }`}
+        />
+        <div
+          className={`relative flex items-center justify-between px-gutter transition-[padding] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             scrolled ? "py-4" : "py-6 md:py-8"
           }`}>
           <a
