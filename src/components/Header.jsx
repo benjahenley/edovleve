@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap, useGsap, EASE_EXPO } from "../lib/anim";
 import { NAV, COMPANY } from "../data";
 
@@ -54,19 +54,33 @@ export default function Header() {
 
   // Lock scrolling while the mobile menu is open. Lenis toggles the
   // `lenis-stopped` class, whose overflow:clip also blocks native touch scroll.
+  // Skipped while `go()` is mid-navigation — Lenis's start() resets/cancels
+  // any in-flight scrollTo, which would otherwise cancel the tap-to-scroll.
+  const navigatingRef = useRef(false);
   useEffect(() => {
     if (open) window.lenis?.stop();
-    else window.lenis?.start();
+    else if (!navigatingRef.current) window.lenis?.start();
   }, [open]);
 
   const go = (e, href) => {
     e.preventDefault();
+    navigatingRef.current = true;
+    window.lenis?.start();
     setOpen(false);
     const el = document.querySelector(href);
-    if (el)
+    if (el) {
       window.lenis
-        ? window.lenis.scrollTo(el, { offset: -20, force: true })
+        ? window.lenis.scrollTo(el, {
+            offset: -20,
+            force: true,
+            onComplete: () => {
+              navigatingRef.current = false;
+            },
+          })
         : el.scrollIntoView();
+    } else {
+      navigatingRef.current = false;
+    }
   };
 
   return (
