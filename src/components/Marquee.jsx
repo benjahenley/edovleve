@@ -24,7 +24,9 @@ function Row() {
 
 export default function Marquee() {
   return (
-    <section className="overflow-hidden border-y border-line-invert bg-ink py-8 md:py-12">
+    <section
+      data-nav-dark
+      className="overflow-hidden border-y border-line-invert bg-ink py-8 md:py-12">
       <div className="flex w-max animate-marquee">
         <Row />
         <Row />

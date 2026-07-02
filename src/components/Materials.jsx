@@ -47,6 +47,7 @@ export default function Materials() {
     <section
       id="superficies"
       ref={scope}
+      data-nav-dark
       className="relative h-[100svh] overflow-hidden bg-ink text-bone">
       <div
         ref={track}

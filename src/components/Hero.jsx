@@ -25,8 +25,10 @@ export default function Hero() {
         0.9,
       );
 
-    // Parallax + soft dissolve on scroll.
-    gsap.to(img.current, {
+    // Parallax + soft dissolve on scroll. Runs on the WRAPPER, not the img —
+    // the intro tween owns the img's scale, and sharing the property makes
+    // the first scroll snap the image back to its pre-intro size.
+    gsap.to(imgWrap.current, {
       yPercent: 18,
       scale: 1.08,
       ease: "none",
@@ -69,7 +71,7 @@ export default function Hero() {
         <div className="hero-cover absolute inset-0 z-10 bg-bone" />
       </div>
 
-      <div className="hero-content relative z-20 flex h-full flex-col justify-start px-gutter pb-[clamp(2rem,5vh,4rem)] pt-[18vh]">
+      <div className="hero-content relative z-20 flex h-full flex-col justify-start px-gutter pb-[clamp(2rem,5vh,4rem)] pt-[24vh] md:pt-[18vh]">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:gap-14">
           <h1 className="font-display text-ink text-[clamp(3.2rem,12vw,12rem)] leading-[1.14] md:flex-1">
             {HEADLINE.map((line, i) => (
@@ -80,11 +82,11 @@ export default function Hero() {
           </h1>
 
           <div className="flex flex-col gap-6 border-t border-line pt-6 md:w-64 md:shrink-0 md:border-t-0 md:border-l md:pb-2 md:pl-8 md:pt-0">
-            <p className="hero-fade text-sm leading-relaxed text-ink-soft">
+            <p className="hero-fade text-sm font-normal leading-relaxed text-ink md:text-base">
               Estudio de arquitectura, construcción y superficie. Del proyecto a
               la materia, un mismo lenguaje para el espacio contemporáneo.
             </p>
-            <div className="hero-fade flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.24em] text-stone">
+            <div className="hero-fade flex items-center gap-3 text-[0.7rem] font-medium uppercase tracking-[0.24em] text-ink-soft">
               Desplazar
             </div>
           </div>

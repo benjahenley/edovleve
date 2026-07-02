@@ -88,6 +88,44 @@ const ICONS = [
       />
     </svg>
   ),
+  // Sierra fan (own design, for San Luis): three capsules crossed at 60°,
+  // a six-pointed rosette that turns slowly — kin to the crossed capsules
+  // and the sunburst.
+  (props) => (
+    <svg viewBox="0 0 75 75" fill="none" {...props}>
+      <g className="icon-spin-slow">
+        <rect
+          x="21"
+          y="3"
+          width="33"
+          height="69"
+          rx="16.5"
+          stroke="currentColor"
+          strokeWidth="5"
+        />
+        <rect
+          x="21"
+          y="3"
+          width="33"
+          height="69"
+          rx="16.5"
+          stroke="currentColor"
+          strokeWidth="5"
+          transform="rotate(60 37.5 37.5)"
+        />
+        <rect
+          x="21"
+          y="3"
+          width="33"
+          height="69"
+          rx="16.5"
+          stroke="currentColor"
+          strokeWidth="5"
+          transform="rotate(120 37.5 37.5)"
+        />
+      </g>
+    </svg>
+  ),
 ];
 
 // Editorial descriptions — one per jurisdiction, written for tone rather

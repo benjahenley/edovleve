@@ -28,6 +28,7 @@ export default function Footer() {
   return (
     <section
       id="contacto"
+      data-nav-dark
       className="overflow-hidden bg-ink px-gutter py-[clamp(6rem,16vh,12rem)] text-bone">
       <div className="mx-auto max-w-[1400px]">
         <h2

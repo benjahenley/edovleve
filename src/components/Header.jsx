@@ -5,6 +5,7 @@ import { NAV, COMPANY } from "../data";
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [dark, setDark] = useState(false);
 
   const scope = useGsap(() => {
     // Navbar is the last piece of the load-in sequence — it settles in
@@ -26,33 +27,56 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Flip the header items to bone while a dark section sits under the bar.
+  useEffect(() => {
+    const zones = Array.from(document.querySelectorAll("[data-nav-dark]"));
+    if (!zones.length) return;
+    const probe = () => {
+      const y = 44; // ~vertical center of the bar
+      setDark(
+        zones.some((z) => {
+          const r = z.getBoundingClientRect();
+          return r.top <= y && r.bottom >= y;
+        }),
+      );
+    };
+    probe();
+    window.addEventListener("scroll", probe, { passive: true });
+    window.addEventListener("resize", probe, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", probe);
+      window.removeEventListener("resize", probe);
+    };
+  }, []);
+
+  // Over the white menu overlay the items must always read as ink.
+  const inverted = dark && !open;
+
+  // Lock scrolling while the mobile menu is open. Lenis toggles the
+  // `lenis-stopped` class, whose overflow:clip also blocks native touch scroll.
+  useEffect(() => {
+    if (open) window.lenis?.stop();
+    else window.lenis?.start();
+  }, [open]);
+
   const go = (e, href) => {
     e.preventDefault();
     setOpen(false);
     const el = document.querySelector(href);
     if (el)
       window.lenis
-        ? window.lenis.scrollTo(el, { offset: -20 })
+        ? window.lenis.scrollTo(el, { offset: -20, force: true })
         : el.scrollIntoView();
   };
 
   return (
     <>
+      {/* Transparent header; items flip between ink and bone depending on the
+          section under the bar. (Colors are probed on scroll rather than
+          mix-blended — blend modes on fixed elements glitch iOS Safari.) */}
       <header
         ref={scope}
         className="fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)]">
-        {/* The background extends 6rem ABOVE the viewport top: iOS Safari
-            (portrait) keeps fixed elements below the status bar but still
-            paints the canvas behind it, so this overshoot is what covers the
-            dynamic-island strip when content scrolls under. */}
-        <div
-          aria-hidden
-          className={`absolute inset-x-0 -top-24 bottom-0 border-b transition-[background-color,border-color] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-            scrolled
-              ? "border-line bg-bone/85 backdrop-blur-md"
-              : "border-transparent"
-          }`}
-        />
         <div
           className={`relative flex items-center justify-between px-gutter transition-[padding] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             scrolled ? "py-4" : "py-6 md:py-8"
@@ -60,7 +84,9 @@ export default function Header() {
           <a
             href="#top"
             onClick={(e) => go(e, "#top")}
-            className="font-display text-ink"
+            className={`font-display transition-colors duration-500 ${
+              inverted ? "text-bone" : "text-ink"
+            }`}
             aria-label={COMPANY.legalName}>
             <span
               className={`block leading-none tracking-[0.28em] transition-all duration-700 ${
@@ -76,9 +102,15 @@ export default function Header() {
                 key={n.href}
                 href={n.href}
                 onClick={(e) => go(e, n.href)}
-                className="group relative text-[0.7rem] uppercase tracking-[0.24em] text-ink-soft">
+                className={`group relative text-[0.7rem] font-medium uppercase tracking-[0.24em] transition-colors duration-500 ${
+                  inverted ? "text-bone" : "text-ink"
+                }`}>
                 {n.label}
-                <span className="absolute -bottom-1 left-0 h-px w-0 bg-ink transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-full" />
+                <span
+                  className={`absolute -bottom-1 left-0 h-px w-0 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:w-full ${
+                    inverted ? "bg-bone" : "bg-ink"
+                  }`}
+                />
               </a>
             ))}
           </nav>
@@ -88,14 +120,14 @@ export default function Header() {
             className="flex h-6 w-8 flex-col items-end justify-center gap-[6px] md:hidden"
             aria-label="Menú">
             <span
-              className={`h-px bg-ink transition-all duration-500 ${
-                open ? "w-6 translate-y-[3.5px] rotate-45" : "w-8"
-              }`}
+              className={`h-px transition-all duration-500 ${
+                inverted ? "bg-bone" : "bg-ink"
+              } ${open ? "w-6 translate-y-[3.5px] rotate-45" : "w-8"}`}
             />
             <span
-              className={`h-px bg-ink transition-all duration-500 ${
-                open ? "w-6 -translate-y-[3.5px] -rotate-45" : "w-5"
-              }`}
+              className={`h-px transition-all duration-500 ${
+                inverted ? "bg-bone" : "bg-ink"
+              } ${open ? "w-6 -translate-y-[3.5px] -rotate-45" : "w-5"}`}
             />
           </button>
         </div>

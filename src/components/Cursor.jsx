@@ -74,12 +74,10 @@ export default function Cursor() {
       <div
         ref={ring}
         className="absolute left-0 top-0 h-9 w-9 -translate-x-1/2 -translate-y-1/2 rounded-full border border-ink opacity-0"
-        style={{ marginLeft: "-18px", marginTop: "-18px" }}
       />
       <div
         ref={dot}
         className="absolute left-0 top-0 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink opacity-0"
-        style={{ marginLeft: "-2px", marginTop: "-2px" }}
       />
     </div>
   );
