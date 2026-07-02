@@ -41,13 +41,13 @@ export default function Header() {
       <header
         ref={scope}
         className="fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)]">
-        {/* Background lives on a child, not the fixed element itself — iOS
-            Safari samples the fixed element's background-color to tint the
-            status-bar / dynamic-island area, and a translucent one lets page
-            content show through up there. */}
+        {/* The background extends 6rem ABOVE the viewport top: iOS Safari
+            (portrait) keeps fixed elements below the status bar but still
+            paints the canvas behind it, so this overshoot is what covers the
+            dynamic-island strip when content scrolls under. */}
         <div
           aria-hidden
-          className={`absolute inset-0 border-b transition-[background-color,border-color] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          className={`absolute inset-x-0 -top-24 bottom-0 border-b transition-[background-color,border-color] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             scrolled
               ? "border-line bg-bone/85 backdrop-blur-md"
               : "border-transparent"
@@ -103,7 +103,7 @@ export default function Header() {
 
       {/* Mobile overlay */}
       <div
-        className={`fixed inset-0 z-40 flex flex-col justify-center bg-bone px-gutter transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden ${
+        className={`fixed inset-x-0 -top-24 bottom-0 z-40 flex flex-col justify-center bg-bone px-gutter pt-24 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:hidden ${
           open
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
